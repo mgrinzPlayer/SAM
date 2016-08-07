@@ -1,27 +1,18 @@
-OBJS = reciter.o sam.o render.o main.o debug.o
-
 CC = gcc
 
-# libsdl present
-CFLAGS =  -Wall -O2 -DUSESDL `sdl-config --cflags`
-LFLAGS = `sdl-config --libs`
+OBJ = main.o reciter.o sam.o render.o
 
-# no libsdl present
-#CFLAGS =  -Wall -O2
-#LFLAGS = 
+CFLAGS = -Wall -O2
+LFLAGS =
 
-sam: $(OBJS)
-	$(CC) -o sam $(OBJS) $(LFLAGS)
+sam32: $(OBJ)
+	$(CC) $(OBJ) $(LFLAGS) -shared -o sam-i686.dll
+
+sam64: $(OBJ)
+	$(CC) $(OBJ) $(LFLAGS) -shared -o sam-x86_64.dll
 
 %.o: src/%.c
 	$(CC) $(CFLAGS) -c $<
 
-package: 
-	tar -cvzf sam.tar.gz README.md Makefile sing src/
-
 clean:
-	rm *.o
-
-archive:
-	rm -f sam_windows.zip
-	cd ..; zip SAM/sam_windows.zip	SAM/sam.exe SAM/SDL.dll SAM/README.md SAM/demos/*.bat
+	del *.o
