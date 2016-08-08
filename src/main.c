@@ -7,14 +7,14 @@
 extern int bufferpos;
 extern char *buffer;
 
-char* sayThis(char *text)
+int __fastcall sayThis(char* outsideBuffer)
 {
   int i;
   char input[256];
 
   for(i=0; i<256; i++) input[i] = 0;
 
-  strncat(input, text, 256);
+  strncat(input, outsideBuffer, 256);
 
   for(i=0; input[i] != 0; i++)
     input[i] = toupper((int)input[i]);
@@ -25,7 +25,7 @@ char* sayThis(char *text)
     SetInput(input);
 
     bufferpos = 0;
-    buffer = malloc(22050*20);
+    buffer = outsideBuffer;
 
     buffer = buffer+44;
 
@@ -64,10 +64,11 @@ char* sayThis(char *text)
       memcpy(&buffer[4], &filesize, 4);
       memcpy(&buffer[40], &bufferlength, 4);
 
-      return buffer;
+      return 0; // no errors
     }
+    return 2; // SAMMain error
   }
-  return NULL;
+  return 1; // TextToPhonemes error
 }
 
 
